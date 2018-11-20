@@ -29,6 +29,7 @@ gem 'figaro'
 gem 'faraday'
 gem 'font-awesome-rails'
 gem 'active_model_serializers', '~> 0.10.0'
+gem "valid_email2"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
