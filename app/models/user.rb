@@ -1,8 +1,10 @@
 class User < ApplicationRecord
   has_secure_password
-  enum roll: [:default, :admin]
-  has_many :friend_requests, dependent: :destroy
-  has_many :pending_friends, through: :friend_requests, source: :friend
+
+  enum role: [:default, :admin]
+
+  has_many :friendships, dependent: :destroy
+  has_many :friends, through: :friendships
 
   validates :email,
 
@@ -12,4 +14,24 @@ class User < ApplicationRecord
   validates :email,
 
             uniqueness: true
+
+  def self.approved(current_user)
+    select(:id, :email).
+    joins(
+          "INNER JOIN friendships
+           ON users.id = friendships.user_id
+           WHERE friendships.friend_id = #{current_user.id}
+           AND friendships.approved=1"
+         )
+  end
+
+  def self.unapproved(current_user)
+    select(:id, :email).
+    joins(
+          "INNER JOIN friendships
+           ON users.id = friendships.friend_id
+           WHERE friendships.user_id = #{current_user.id}
+           AND friendships.approved=0"
+         )
+  end
 end
