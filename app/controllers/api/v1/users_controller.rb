@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user, only: [:index, :update]
+  before_action :authenticate_user, only: [:index, :update, :show]
 
   def show
     if @user = User.find(params[:id])
@@ -37,7 +37,4 @@ private
   def user_params
     params.permit(:email, :password)
   end
-end
-
-
 end

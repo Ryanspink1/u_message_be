@@ -34,4 +34,9 @@ class Friendship < ApplicationRecord
       Friendship.create(user_id: friend_id, friend_id: user_id, approved:"yes")
     end
   end
+
+  def self.delete_pair(friendship)
+    Friendship.find_by(user_id: friendship.friend_id, friend_id:friendship.user_id).delete if friendship.approved == 'yes'
+    friendship.delete
+  end
 end

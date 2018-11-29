@@ -12,6 +12,7 @@ require 'simplecov'
 require 'webmock/rspec'
 require 'vcr'
 require 'faker'
+require "action_cable/testing/rspec"
 
 Faker::Config.locale = 'en-US'
 
