@@ -25,7 +25,7 @@ class Api::V1::FriendshipsController < ApplicationController
     @friend_requests = User.unapproved(current_user)
 
     render json: {
-                  friends: @friends,
+                  friends:         @friends,
                   friend_requests: @friend_requests
                  }
   end
