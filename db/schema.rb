@@ -10,14 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181127045441) do
+ActiveRecord::Schema.define(version: 20181127043813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "conversations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "recipient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_conversations_on_recipient_id"
+    t.index ["user_id"], name: "index_conversations_on_user_id"
   end
 
   create_table "friendships", force: :cascade do |t|
@@ -33,7 +37,9 @@ ActiveRecord::Schema.define(version: 20181127045441) do
   create_table "messages", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "conversation_id"
-    t.text "text"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
@@ -41,13 +47,6 @@ ActiveRecord::Schema.define(version: 20181127045441) do
   create_table "threads", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "user_conversations", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "conversation_id"
-    t.index ["conversation_id"], name: "index_user_conversations_on_conversation_id"
-    t.index ["user_id"], name: "index_user_conversations_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -58,9 +57,8 @@ ActiveRecord::Schema.define(version: 20181127045441) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "conversations", "users"
   add_foreign_key "friendships", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
-  add_foreign_key "user_conversations", "conversations"
-  add_foreign_key "user_conversations", "users"
 end

@@ -2,8 +2,8 @@ class Api::V1::FriendshipsController < ApplicationController
   before_action :authenticate_user
 
   def create
-    friend      = User.find_by(friend_request_params[:email])
-    @friendship = current_user.friendship.new(friend: friend)
+    friend      = User.find_by(email: friendship_params[:friend_email])
+    @friendship = current_user.friendships.new(friend: friend)
 
     if @friendship.save
       render json: @friendship
@@ -31,7 +31,7 @@ class Api::V1::FriendshipsController < ApplicationController
   end
 
   def update
-    @friendship = Friendship.find_by(user_id:friendship_params[:id], friend:current_user)
+    @friendship = Friendship.find_by(user_id: friendship_params[:id], friend: current_user)
 
     if @friendship.update( approved: 'yes' )
       render json: @friendship
@@ -41,8 +41,8 @@ class Api::V1::FriendshipsController < ApplicationController
   end
 
   def destroy
-    @friendship = Friendship.find_by(user_id:friendship_params[:id], friend:current_user)
-    if @friendship.delete
+    @friendship = Friendship.find_by(user_id: friendship_params[:id], friend: current_user)
+    if Friendship.delete_pair(@friendship)
       render status: :no_content
     else
       render json: @friend_request.errors, status: :bad_request
@@ -52,6 +52,6 @@ class Api::V1::FriendshipsController < ApplicationController
   private
 
   def friendship_params
-    params.permit(:id, :email)
+    params.permit(:id, :friend_email)
   end
 end
